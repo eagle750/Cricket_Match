@@ -1,66 +1,111 @@
 import java.util.concurrent.*;
+import java.text.DecimalFormat;
 import java.util.*;
+
 //class containing function for conducting match between teams
 public class Match {
 	String outcomes[] = {"0", "1", "2", "3", "4", "5", "6", "W"};     //String array containing all the possible outcomes of a ball
+	
+	DecimalFormat df = new DecimalFormat("#.#");
+	
+    int player1 = 0;int player2 = 1;double Over = 0;               //variables to store the index of players currently playing
+	
+    
 	public int toss()                            //function to randomly perform the task of tossing the coin
 	{
-        int tossResult = ThreadLocalRandom.current().nextInt(2);    //uisng ThreadLocalRandom class
+        int tossResult = ThreadLocalRandom.current().nextInt(2);    //using ThreadLocalRandom class
         if(tossResult == 0 )
         {   
-            System.out.println("Team1 won the toss");
+            System.out.println("CSK won the toss and chose to bat");
             System.out.println();
             return 1;
         }
         else
         {
-            System.out.println("Team2 won the toss");
+            System.out.println("RCB won the toss and chose to bat");
             System.out.println();
             return 2;
         }
     }
-	public int innings(int overs, Vector<String> team)             //function to simulate the playing of a team with given overs and specified team
+	
+	
+	public int innings(int overs, Team team, String printOver, String innings)             //function to simulate the playing of a team with given overs and specified team
 	{
-        int totalRuns = 0;
-        int totalWickets = 0;
-        int player1 = 0;int player2 = 1;               //variables to store the index of players currently playing
-
+         player1 = 0; player2 = 1; Over = 0;               //variables to store the index of players currently playing
+        
        for(int i = 1;i <= overs;i++)
        {
+    	   Over = (double)i;
             for(int j = 1;j <= 6;j++)
             {
+            	Over += (double)1/10;
                 int run = ballingOutcome();
+                
                 if(run <= 7 )                     // here run represents the index of string array "outcomes" defined above in class
                 {   
-                    System.out.println("Over = " + i  +" ball = " + j + " run = " + run );
-                    totalRuns += run;
+                	 team.playerList.get(player1).runScored += run;
+                	 
+                	 if(run == 4)									//to count the no of fours hit by batsman
+                		 team.playerList.get(player1).fours += 1;
+                	 
+                	 if(run == 6)
+                		 team.playerList.get(player1).sixes += 1;
+                	 
+                	if(run%2 == 1)
+                	{
+                		player1 = swap(player2, player2 = player1);				//if runs are odd then swap the players
+                	}
+                	
+                    team.totalScore += run;  
+                                        
+                    if(df.format(Over).equals(printOver))				//check if current over is equal to given over and call printScoreBoard
+                    	printScoreBoard(team, printOver, innings);
+                    
+                    System.out.println("Over = " + df.format(Over) + " run = " +  team.totalScore + "/" + team.totalWickets);
                 }
                 else                                //else run = 8 which represents the "W" in "outcomes" array ,means a wicket is down
                 {
-                    System.out.println();
-                    totalWickets++;
-                    System.out.println("Player " + team.get(player1) + " is out");       //print the player name whose wicket has been taken
-                    System.out.println();
+                    team.totalWickets++;
+                    System.out.println("\nPlayer " + team.playerList.get(player1).name + "  -  " + team.playerList.get(player1).runScored +" is out\n");       //print the player name whose wicket has been taken
+                   
+                    if(df.format(Over).equals(printOver))					//check if current over is equal to given over and call printScoreBoard
+                    	printScoreBoard(team, printOver, innings);
                     
                     int nextPlayer = Math.max(player1, player2) + 1;
 
-                    if(nextPlayer == 6)                          //this represents the situation when 6th player is down
+                    if(nextPlayer == 7)                          //this represents the situation when 6th player is down
                     {
-                        System.out.println("All wicket down");
-                        System.out.println();
-                        return totalRuns;
+                        System.out.println("All wicket down\n");
+                        return team.totalScore;
                     }
 
                     player1  = nextPlayer;                      //replace the player whose wicket is down with a new player
                 }
             }
-            System.out.println();
-            System.out.println("Players on the ground " + team.get(player1) + " and " + team.get(player2));   //print the players currently playing
-            System.out.println();
+            System.out.println("\nPlayers on the ground " + team.playerList.get(player1).name + "  -  " + team.playerList.get(player1).runScored +" and " + team.playerList.get(player2).name + "  -  " + team.playerList.get(player2).runScored + "\n");   //print the players currently playing
+            
             player1 = swap(player2, player2 = player1);                     //switch players at the end of each over
        }
-        return totalRuns;                                   //return totalRuns scored by a team
+        return team.totalScore;                                   //return totalRuns scored by a team
     }
+	
+	
+	public void printScoreBoard(Team team, String printOver, String innings)    //function to print the scoreboard for given team and given over
+	{
+		System.out.println("************************************************************");
+		System.out.println("				SCOREBOARD				");
+		System.out.println("************************************************************\n");
+		System.out.println(innings  + " " + team.name +" is batting\n");
+		if(innings == "2nd innings")
+			System.out.println(" scored -  " + MatchController.prevTeamScore);
+		System.out.println("Over - " + df.format(Over));
+		System.out.println( team.playerList.get(player1).name + "*" + "      - " + team.playerList.get(player1).runScored + "   4's - " + team.playerList.get(player1).fours + "   6's - " + team.playerList.get(player1).sixes );
+		System.out.println( team.playerList.get(player2).name + "      - " + team.playerList.get(player2).runScored + "   4's - " + team.playerList.get(player2).fours + "   6's - " + team.playerList.get(player2).sixes );
+
+		System.out.println("************************************************************\n");
+	}
+	
+	
 	public int ballingOutcome()   //function to randomly generate the outcome of balling from array "outcomes" defined above
     {
         int index;
@@ -69,13 +114,10 @@ public class Match {
         return index;
     }
 
+	
     public int swap(int value1, int value2)           //function to swap the players
     {
         return value1;
     }
-    
-	
-
-
-
+ 
 }

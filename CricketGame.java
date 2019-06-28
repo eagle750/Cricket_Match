@@ -3,20 +3,19 @@ import java.util.*;
 public class CricketGame {
 
 	public static void main(String[] args) {
-		Vector<String> temp = new Vector<String>(); ///temporary list
-
+		Vector<Player> temp = new Vector<Player>(); ///temporary list to store the list of players
+		
+		
         String[] collection = {"Sachin", "Sehwag", "Yuvraj", "Saurav", "Bumrah", "Pandya", "Dhoni", "Kohli", "Rohit", "Raina", "Chahal", "Dhawan", "Shankar", "Jadeja", "Sami", "Robin"};                       //array containing list of player names
 
-        for(int i = 0;i < collection.length;i++)        //adding the array elements to temp array
-        {   
-            temp.add(collection[i]);
+        for(int i = 0;i < collection.length;i++)        //initializing the player list
+        {   Player player = new Player(collection[i], 0, 0, 0, 0);
+            temp.add(player);
         }
 
-        Player play = new Player();
-        play.setPlayerList(temp);               //using the setter function of Player class to set the player list
-
         MatchController  matchController  =  new MatchController();
-        matchController.controller();           //invoking the controller method of MatchController class
+        matchController.controller("5.5", temp);           //invoking the controller method with initial playerList and and over 
+        													//after which scoreboard is to be printed
      }
 
 	}

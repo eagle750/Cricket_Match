@@ -1,18 +1,18 @@
-import java.util.*;
-
-
 public class Player {
 	
-	static  Vector<String> players =  new Vector<String>();  //Array containing all the players
-	public void setPlayerList(Vector<String>  players)        //Setter function to initialize the playerList
-	{   
-        for(int i=0;i<players.size();i++)
-        this.players.add(players.get(i));
-    }
-	public Vector<String> getPlayerList()             //Getter function to return playerList
-    {   
-        return players;
-    }
-
-
+	String name;
+	int runScored;
+	int ballsplayed;
+	int sixes;
+	int fours;
+	
+	Player(String name, int runScored, int ballsPlayed, int sixes, int fours)
+	{
+		this.name = name;
+		this.runScored = runScored;
+		this.ballsplayed = ballsPlayed;
+		this.sixes = sixes;
+		this.fours = fours;
+		
+	}	
 }
