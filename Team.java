@@ -3,19 +3,17 @@ import java.util.*;
 public class Team {
 
 	
-	Vector<Player> playerList = new Vector<Player>();
-	String name;
-	int totalScore;
-	int totalWickets;
-	int toBat;
+	private Vector<Player> playerList = new Vector<Player>();
+	private String name;
+	private int totalScore;
+	private int totalWickets;
 	
-	Team(String name, Vector<Player> playerList,int totalScore, int totalWickets,int toBat)
+	Team(String name, Vector<Player> playerList,int totalScore, int totalWickets)
 	{
 		setName(name);
 		setPlayerList(playerList);
 		setTotalScore(totalScore);
 		setTotalWickets(totalWickets);
-		setToBat(toBat);
 	}
 	
 	//Setter Function
@@ -42,8 +40,36 @@ public class Team {
 		this.totalWickets = totalWickets;
 	}
 	
-	public void setToBat(int toBat)
+	//getter functions
+	public String getName()
 	{
-		this.toBat = 0;
+		return name;
 	}
+	
+	public Vector<Player> getPlayerList()
+	{
+		return playerList;
+	}
+	
+	public int getTotalScore()
+	{
+		return totalScore;
+	}
+	
+	public int getTotalWickets()
+	{
+		return totalWickets;
+	}
+	
+	//Modify function
+	public void addTotalScore(int runs)
+	{
+		totalScore += runs;
+	}
+	
+	public void addTotalWickets()
+	{
+		totalWickets += 1 ;
+	}
+
 }

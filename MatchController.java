@@ -4,7 +4,7 @@ import java.util.concurrent.*;
 public class MatchController {
 	Vector<Player> team1Players = new Vector<Player>();                  //array to store the list of names for team1
     Vector<Player> team2Players =  new Vector<Player>();                 //array to store the list of names for team2
-    Set<Integer> playerSet = new HashSet<Integer>();        //set to check if a player choosen has already been assigned a team
+    Set<Integer> playerSet = new HashSet<Integer>();        //set to check if a player chosen has already been assigned a team
 
     static Team prevTeam;
     Team team1;
@@ -13,11 +13,11 @@ public class MatchController {
     
     public void controller(String printOver, Vector<Player> collection)
     {
-    team1Players = assignTeam(collection);                                   //function to assign andomly create 2 teams with 7 players each
-    team1 = new Team("CSK", team1Players, 0, 0, 0);
+    team1Players = assignTeam(collection);                                   //function to assign randomly create 2 teams with 7 players each
+    team1 = new Team("CSK", team1Players, 0, 0);
 
     team2Players = assignTeam(collection);
-    team2 = new Team("RCB", team2Players, 0, 0, 0);
+    team2 = new Team("RCB", team2Players, 0, 0);
 
     
     System.out.println("Team 1 members are:- \n");
@@ -82,7 +82,7 @@ public class MatchController {
     {
     for(int i = 0;i < 7; i++)
         {
-           System.out.print (team.get(i).name + " ");
+           System.out.print (team.get(i).getName() + " ");
         }
     System.out.println();
     }
@@ -94,15 +94,15 @@ public class MatchController {
     	System.out.println("FINAL RESULT");
     	System.out.println("*****************************************************************\n");
 
-        if(team1.totalScore > team2.totalScore)
+        if(team1.getTotalScore() > team2.getTotalScore())
         {
-            int winningRun = team1.totalScore - team2.totalScore;
-            System.out.println( team1.name + " won by " + winningRun + " runs\n");
+            int winningRun = team1.getTotalScore() - team2.getTotalScore();
+            System.out.println( team1.getName() + " won by " + winningRun + " runs\n");
         }
-        else if(team1.totalScore < team2.totalScore)
+        else if(team1.getTotalScore() < team2.getTotalScore())
         {
-            int winningWicket = 7 - team2.totalWickets;
-            System.out.println( team2.name + " won by " + winningWicket + " wickets\n");
+            int winningWicket = 7 - team2.getTotalWickets();
+            System.out.println( team2.getName() + " won by " + winningWicket + " wickets\n");
         }
         else
             System.out.println("Draw");
@@ -116,17 +116,17 @@ public class MatchController {
     {
     	int cntr = 1;
     	System.out.println("--------------------------------------------------");
-    	System.out.println("\n		" + team.name + "\n");
-    	for(int i=0;i<team.playerList.size();i++)
+    	System.out.println("\n		" + team.getName() + "\n");
+    	for(int i=0;i<team.getPlayerList().size();i++)
     	{	
     		System.out.print(cntr++ + "   ");
-    		if(team.playerList.get(i).out == 1)
-    			System.out.println(team.playerList.get(i).name + "			" +  team.playerList.get(i).runScored + "(" + team.playerList.get(i).ballsplayed +")");
+    		if(team.getPlayerList().get(i).getOut() == 1)
+    			System.out.println(team.getPlayerList().get(i).getName() + "			" +  team.getPlayerList().get(i).getRunScored() + "(" + team.getPlayerList().get(i).getBallsPlayed() +")");
     		else
-    			System.out.println(team.playerList.get(i).name + "*" +"			" +  team.playerList.get(i).runScored + "(" + team.playerList.get(i).ballsplayed +")");
+    			System.out.println(team.getPlayerList().get(i).getName() + "*" +"			" +  team.getPlayerList().get(i).getRunScored() + "(" + team.getPlayerList().get(i).getBallsPlayed() +")");
     		
        	}
-    	System.out.println("\nTOTAL" + "				" + team.totalScore + "/" + team.totalWickets + "\n");
+    	System.out.println("\nTOTAL" + "				" + team.getTotalScore() + "/" + team.getTotalWickets() + "\n");
     	System.out.println("--------------------------------------------------");
     }
     

@@ -43,26 +43,26 @@ public class Match {
                 
                 if(run <= 7 )                     // here run represents the index of string array "outcomes" defined above in class
                 {   
-                	 team.playerList.get(player1).ballsplayed += 1;
-                	 team.playerList.get(player1).runScored += run;
+                	 team.getPlayerList().get(player1).addBallsPlayed();
+                	 team.getPlayerList().get(player1).addRunScored(run);
                 	 
                 	 if(run == 4)									//to count the no of fours hit by batsman
-                		 team.playerList.get(player1).fours += 1;
+                		 team.getPlayerList().get(player1).addFours();
                 	 
                 	 if(run == 6)
-                		 team.playerList.get(player1).sixes += 1;
+                		 team.getPlayerList().get(player1).addSixes();
                 	 
                 	if(run%2 == 1)
                 	{
                 		player1 = swap(player2, player2 = player1);				//if runs are odd then swap the players
                 	}
                 	
-                    team.totalScore += run;  
+                    team.addTotalScore(run);  
                                         
                     if(innings == 2)
                     {
                     	
-                    	if(MatchController.prevTeam.totalScore < team.totalScore)
+                    	if(MatchController.prevTeam.getTotalScore() < team.getTotalScore())
                     	{
                     		inningCompleted = true ;
                     		break;
@@ -71,13 +71,13 @@ public class Match {
                     if(df.format(Over).equals(printOver))				//check if current over is equal to given over and call printScoreBoard
                     	printScoreBoard(team, printOver, innings);
                     
-                    System.out.println("Over = " + df.format(Over) + " runHit = " + run + " 	Score =" +team.totalScore + "/" + team.totalWickets);
+                    System.out.println("Over = " + df.format(Over) + " runHit = " + run + " 	Score =" +team.getTotalScore() + "/" + team.getTotalWickets());
                 }
                 else                                //else run = 8 which represents the "W" in "outcomes" array ,means a wicket is down
                 {
-                    team.totalWickets++;
-                    team.playerList.get(player1).out = 1;
-                    System.out.println("\nPlayer " + team.playerList.get(player1).name + "  -  " + team.playerList.get(player1).runScored +" is out\n");       //print the player name whose wicket has been taken
+                    team.addTotalWickets();
+                    team.getPlayerList().get(player1).modifyOut();
+                    System.out.println("\nPlayer " + team.getPlayerList().get(player1).getName() + "  -  " + team.getPlayerList().get(player1).getRunScored() +" is out\n");       //print the player name whose wicket has been taken
                    
                     if(df.format(Over).equals(printOver))					//check if current over is equal to given over and call printScoreBoard
                     	printScoreBoard(team, printOver, innings);
@@ -87,7 +87,7 @@ public class Match {
                     if(nextPlayer == 7)                          //this represents the situation when 6th player is down
                     {
                         System.out.println("All wicket down\n");
-                        return team.totalScore;
+                        return team.getTotalScore();
                     }
 
                     player1  = nextPlayer;                      //replace the player whose wicket is down with a new player
@@ -96,11 +96,11 @@ public class Match {
             
             if(inningCompleted == true)
             	break;
-            System.out.println("\nPlayers on the ground " + team.playerList.get(player1).name + "  -  " + team.playerList.get(player1).runScored +" and " + team.playerList.get(player2).name + "  -  " + team.playerList.get(player2).runScored + "\n");   //print the players currently playing
+            System.out.println("\nPlayers on the ground " + team.getPlayerList().get(player1).getName() + "  -  " + team.getPlayerList().get(player1).getRunScored() +" and " + team.getPlayerList().get(player2).getName() + "  -  " + team.getPlayerList().get(player2).getRunScored() + "\n");   //print the players currently playing
             
             player1 = swap(player2, player2 = player1);                     //switch players at the end of each over
        }
-        return team.totalScore;                                   //return totalRuns scored by a team
+        return team.getTotalScore();                                   //return totalRuns scored by a team
     }
 	
 	
@@ -109,12 +109,12 @@ public class Match {
 		System.out.println("************************************************************");
 		System.out.println("				SCOREBOARD				");
 		System.out.println("************************************************************\n");
-		System.out.println(innings + " innings" + " " + team.name +" is batting\n");
+		System.out.println(innings + " innings" + " " + team.getName() +" is batting\n");
 		if(innings == 2)
-			System.out.println( MatchController.prevTeam.name +  "  scored -  " + MatchController.prevTeam.totalScore);
+			System.out.println( MatchController.prevTeam.getName() +  "  scored -  " + MatchController.prevTeam.getTotalScore());
 		System.out.println("Over - " + df.format(Over));
-		System.out.println( team.playerList.get(player1).name + "*" + "      - " + team.playerList.get(player1).runScored + "   4's - " + team.playerList.get(player1).fours + "   6's - " + team.playerList.get(player1).sixes );
-		System.out.println( team.playerList.get(player2).name + "      - " + team.playerList.get(player2).runScored + "   4's - " + team.playerList.get(player2).fours + "   6's - " + team.playerList.get(player2).sixes );
+		System.out.println( team.getPlayerList().get(player1).getName() + "*" + "      - " + team.getPlayerList().get(player1).getRunScored() + "   4's - " + team.getPlayerList().get(player1).getFours() + "   6's - " + team.getPlayerList().get(player1).getSixes() );
+		System.out.println( team.getPlayerList().get(player2).getName() + "      - " + team.getPlayerList().get(player2).getRunScored() + "   4's - " + team.getPlayerList().get(player2).getFours() + "   6's - " + team.getPlayerList().get(player2).getSixes() );
 
 		System.out.println("************************************************************\n");
 	}

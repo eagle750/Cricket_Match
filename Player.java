@@ -1,11 +1,11 @@
 public class Player {
 	
-	 String name;
-	 int runScored;
-	 int ballsplayed;
-	 int sixes;
-	 int fours;
-	 int out;
+	 private String name;
+	 private int runScored;
+	 private int ballsplayed;
+	 private int sixes;
+	 private int fours;
+	 private int out;
 	
 	Player(String name, int runScored, int ballsPlayed, int sixes, int fours, int out)
 	{
@@ -48,4 +48,61 @@ public class Player {
 		this.out = out;
 	}
 	
+	//getter function
+	public String getName()
+	{
+		return name;
+	}
+	
+	public int getRunScored ()
+	{
+		return runScored;
+	}
+	
+	public int getBallsPlayed ()
+	{
+		return ballsplayed;
+	}
+	
+	public int getSixes ()
+	{
+		return sixes;
+	}
+	
+	public int getFours ()
+	{
+		return fours;	
+	}
+	
+	public int getOut ()
+	{
+		return out;
+	}
+	
+	//modify function
+	public void addRunScored (int run)
+	{
+		this.runScored += run;
+	}
+	
+	public void addBallsPlayed ()
+	{
+		this.ballsplayed += 1;
+	}
+	
+	public void addSixes ()
+	{
+		this.sixes += 1;
+	}
+	
+	public void addFours ()
+	{
+		this.fours += 1;	
+	}
+	
+	public void modifyOut ()
+	{
+		this.out = 1;
+	}
+		
 }
