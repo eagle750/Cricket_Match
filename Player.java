@@ -1,13 +1,16 @@
 public class Player {
 	
 	 private String name;
+	 private int playerId;
+	 private int ballsThrown;
+	 private int wicketsTaken;
 	 private int runScored;
 	 private int ballsplayed;
 	 private int sixes;
 	 private int fours;
 	 private int out;
 	
-	Player(String name, int runScored, int ballsPlayed, int sixes, int fours, int out)
+	Player(String name, int playerId, int runScored, int ballsPlayed, int sixes, int fours, int out)
 	{
 		setName(name);
 		setRunScored(runScored);
@@ -15,6 +18,7 @@ public class Player {
 		setSixes(sixes);
 		setFours(fours);
 		setOut(out);
+		setPlayerId(playerId);
 	}	
 	
 	//Setter functions
@@ -28,6 +32,11 @@ public class Player {
 		this.runScored = runScored;
 	}
 	
+	public void setPlayerId (int playerId)
+	{
+		this.playerId = playerId;
+	}
+
 	public void setBallsPlayed (int ballsPlayed)
 	{
 		this.ballsplayed = ballsPlayed;
@@ -52,6 +61,11 @@ public class Player {
 	public String getName()
 	{
 		return name;
+	}
+	
+	public int getPlayerId()
+	{
+		return playerId;
 	}
 	
 	public int getRunScored ()
@@ -102,7 +116,7 @@ public class Player {
 	
 	public void modifyOut ()
 	{
-		this.out = 1;
+		this.out += 1;
 	}
 		
 }
