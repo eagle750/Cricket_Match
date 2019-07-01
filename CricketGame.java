@@ -3,16 +3,23 @@ import java.sql.*;
 
 public class CricketGame {
 
+	static {
+        try {
+           Class.forName("com.mysql.cj.jdbc.Driver");
+       } catch (ClassNotFoundException e) {
+           throw new IllegalArgumentException("MySQL db driver isnot on classpath");
+       }
+    }
+	
+	
 	public static void main(String[] args) {
 		Vector<Player> temp = new Vector<Player>(); ///temporary list to store the list of players
 		
-		Connection con = null;
 		PreparedStatement preparedStatement = null;
         String[] collection = {"Sachin", "Sehwag", "Yuvraj", "Saurav", "Bumrah", "Pandya", "Dhoni", "Kohli", "Rohit", "Raina", "Chahal", "Dhawan", "Shankar", "Jadeja", "Sami", "Robin"};                       //array containing list of player names
         
-        try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+){
         	
         	preparedStatement = con.prepareStatement("DELETE FROM Player");
         	preparedStatement.executeUpdate();
@@ -39,18 +46,6 @@ public class CricketGame {
         }
         catch(SQLException se){
         	se.printStackTrace();
-        }
-        catch(ClassNotFoundException e) {
-        	e.getMessage();
-        }
-        finally {
-        	try {
-        		if(con!=null)
-        			con.close();
-        	}
-        	catch(SQLException se){
-        		se.printStackTrace();
-        	}
         }
         
         MatchController  matchController  =  new MatchController();

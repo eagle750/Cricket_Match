@@ -13,8 +13,6 @@ public class MatchController {
     Team team1;
     Team team2;
     
-    
-    Connection con =null;
     PreparedStatement preparedStatement = null;
     ResultSet resultSet = null,resultSet1=null,resultSet2=null;
     
@@ -69,9 +67,8 @@ public class MatchController {
     {
     	Vector<Player> tempList = new Vector<Player>();
     	Vector<Integer>playerIdList = new Vector<Integer>();
-    	try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+    	try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+){
         	preparedStatement = con.prepareStatement("SELECT * FROM Player");
         	resultSet = preparedStatement.executeQuery();
         	
@@ -109,18 +106,6 @@ public class MatchController {
         catch(SQLException se){
         	se.printStackTrace();
         }
-        catch(ClassNotFoundException e) {
-        	e.getMessage();
-        }
-        finally {
-        	try {
-        		if(con!=null)
-        			con.close();
-        	}
-        	catch(SQLException se){
-        		se.printStackTrace();
-        	}
-        }
     	return tempList;
     }
     
@@ -141,12 +126,10 @@ public class MatchController {
     	System.out.println("FINAL RESULT");
     	System.out.println("*****************************************************************\n");
     	
-    	try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+    	try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+){
         	
-        	int One = 1;
-        	int Zero = 0;
+        	int One = 1,Zero = 0;
         	
         	preparedStatement = con.prepareStatement("SELECT * FROM Team WHERE TossWon=" + One);
         	resultSet1 = preparedStatement.executeQuery();
@@ -191,20 +174,7 @@ public class MatchController {
         }
         catch(SQLException se){
         	se.printStackTrace();
-        }
-        catch(ClassNotFoundException e) {
-        	e.getMessage();
-        }
-        finally {
-        	try {
-        		if(con!=null)
-        			con.close();
-        	}
-        	catch(SQLException se){
-        		se.printStackTrace();
-        	}
-        }
-        	        	
+        }        	        	
         
     }
     
@@ -213,12 +183,10 @@ public class MatchController {
     {
     	int cntr = 1;
     	System.out.println("--------------------------------------------------");
-    	try{
+    	try(Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+){
     		
-    		Class.forName("com.mysql.cj.jdbc.Driver");
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
-        	
-        		
+        	   		
     	ResultSet resultSet1;
     	preparedStatement = con.prepareStatement("SELECT * FROM Player WHERE TeamName= '"+ TeamName + "'");
     	resultSet1 = preparedStatement.executeQuery();
@@ -240,19 +208,6 @@ public class MatchController {
     	
     	catch(SQLException se){
         	se.printStackTrace();
-        }
-        catch(ClassNotFoundException e) {
-        	e.getMessage();
-        }
-    	
-        finally {
-        	try {
-        		if(con!=null)
-        			con.close();
-        	}
-        	catch(SQLException se){
-        		se.printStackTrace();
-        	}
         }
     }
     

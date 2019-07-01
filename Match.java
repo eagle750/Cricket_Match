@@ -1,14 +1,13 @@
 import java.util.concurrent.*;
 import java.text.DecimalFormat;
-import java.util.*;
 import java.sql.*
 ;
 //class containing function for conducting match between teams
 public class Match {
 	
-	Connection con = null;
 	PreparedStatement preparedStatement = null;
 	ResultSet resultSet = null;
+	
 	
 	String outcomes[] = {"0", "1", "2", "3", "4", "5", "6", "W"};     //String array containing all the possible outcomes of a ball
 	
@@ -114,6 +113,11 @@ public class Match {
 	                System.out.println("\nPlayers on the ground " + team.getPlayerList().get(player1).getName() + "  -  " + team.getPlayerList().get(player1).getRunScored() +" and " + team.getPlayerList().get(player2).getName() + "  -  " + team.getPlayerList().get(player2).getRunScored() + "\n");   //print the players currently playing
 	                
 	                player1 = swap(player2, player2 = player1);                     //switch players at the end of each over
+	                try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 	           }
 	          
                updateDatabase(team);
@@ -123,9 +127,8 @@ public class Match {
 	
 	public void updateDatabase(Team team)
 	{
-		try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+){
         	
         	preparedStatement = con.prepareStatement("UPDATE Team SET TotalRuns = "+ team.getTotalScore() +" WHERE TeamName= '"+ team.getName()+"'");
         	preparedStatement.executeUpdate();
@@ -163,27 +166,14 @@ public class Match {
   
     catch(SQLException se){
     	se.printStackTrace();
-    }
-    catch(ClassNotFoundException e) {
-    	e.getMessage();
-    }
-    finally {
-    	try {
-    		if(con!=null)
-    			con.close();
-    	}
-    	catch(SQLException se){
-    		se.printStackTrace();
-    	}
-    }
-		
+    }		
 	}
+	
 	
 	public void updateTeam(String team1, String team2)
 	{
-		try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");){
+        	
         	
         	preparedStatement = con.prepareStatement("UPDATE Team SET TossWon = '"+ 1 +"' where TeamName = '"+team1 +"'");
         	preparedStatement.executeUpdate();
@@ -195,25 +185,12 @@ public class Match {
         catch(SQLException se){
         	se.printStackTrace();
         }
-        catch(ClassNotFoundException e) {
-        	e.getMessage();
-        }
-        finally {
-        	try {
-        		if(con!=null)
-        			con.close();
-        	}
-        	catch(SQLException se){
-        		se.printStackTrace();
-        	}
-        }
 	}
 	
 	public void updateBallInfo(int cntr,Team team, int player1, int run)
 	{
-		try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");
+){
         	
         	if(run<=7)
         	{
@@ -232,19 +209,9 @@ public class Match {
         catch(SQLException se){
         	se.printStackTrace();
         }
-        catch(ClassNotFoundException e) {
-        	e.getMessage();
-        }
-        finally {
-        	try {
-        		if(con!=null)
-        			con.close();
-        	}
-        	catch(SQLException se){
-        		se.printStackTrace();
-        	}
-        }
 	}
+	
+	
 	public void printScoreBoard(Team team, String printOver, int innings)    //function to print the scoreboard for given team and given over
 	{
 		System.out.println("************************************************************");
