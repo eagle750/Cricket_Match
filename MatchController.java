@@ -20,13 +20,13 @@ public class MatchController {
 
     team2Players = DbHelper.assignTeam("RCB",playerSet);
     team2 = new Team("RCB", team2Players, 0, 0);
-    
-    System.out.println("Team 1 members are:- \n");
-    Display.printPlayerDetails(team1Players);
+
+    String str = "Team 1 members are:- \n";
+    Display.printPlayerDetails(str, team1Players);
     System.out.println();
-    
-    System.out.println("Team 2 members are:- \n");
-    Display.printPlayerDetails(team2Players);
+
+    str = "Team 2 members are:- \n";
+    Display.printPlayerDetails(str, team2Players);
     System.out.println();
     
     Match match =  new Match();
@@ -37,24 +37,24 @@ public class MatchController {
     if(tossResult == 1)                                     //if tossResult is 1 team1 gets to play first else team2
     {
 
-         System.out.println("First innings\n");
-         team1Score = match.innings(10,team1, printOver, 1 );
+         str = "1st innings\n";
+         team1Score = match.innings(str,10,team1, printOver, 1 );
          prevTeam = team1;
 
-         System.out.println("2nd innings\n");
-         team2Score = match.innings(10,team2, printOver, 2);
+         str = "2nd innings\n";
+         team2Score = match.innings(str,10,team2, printOver, 2);
          DbHelper.updateMatchStatus("completed");
     }
     
     else
     {
-         System.out.println("First innings\n");
-         team1Score = match.innings(15,team2, printOver, 1);
+         str = "1st innings\n";
+         team1Score = match.innings(str,15,team2, printOver, 1);
          prevTeam = team2;
 
-        System.out.println("2nd innings");
-         team2Score = match.innings(15,team1, printOver, 2);
-        DbHelper.updateMatchStatus("completed");
+        str = "2nd innings\n";
+        team2Score = match.innings(str,15,team1, printOver, 2);
+         DbHelper.updateMatchStatus("completed");
 
     }
     

@@ -1,9 +1,14 @@
 import java.util.concurrent.*;
 import java.text.DecimalFormat;
-;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 //class containing function for conducting match between teams
 public class Match {
-	
+
+	private final static Logger LOGGER =
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
 	DecimalFormat df = new DecimalFormat("#.#");
 
 	String outcomes[] = {"0", "1", "2", "3", "4", "5", "6", "W"};     //String array containing all the possible outcomes of a ball	
@@ -11,24 +16,28 @@ public class Match {
 	
 	public int doToss()                            //function to randomly perform the task of tossing the coin
 	{
+		LOGGER.setLevel(Level.WARNING);
         int tossResult = ThreadLocalRandom.current().nextInt(2);    //using ThreadLocalRandom class
         if(tossResult == 0 )
-        {   
-            System.out.println("CSK won the toss and chose to bat\n");
+        {
+        	LOGGER.log(Level.INFO,"CSK won the toss and chose to bat\n");
             DbHelper.updateTeamInfo("CSK", "RCB");
             return 1;
         }
         else
         {
-            System.out.println("RCB won the toss and chose to bat\n");
+			LOGGER.log(Level.INFO,"RCB won the toss and chose to bat\n");
             DbHelper.updateTeamInfo("RCB", "CSK");
             return 2;
         }
     }
 	
 	
-	public int innings(int overs, Team team, String printOver, int innings)             //function to simulate the playing of a team with given overs and specified team
+	public int innings(String str,int overs, Team team, String printOver, int innings)             //function to simulate the playing of a team with given overs and specified team
 	{
+		LOGGER.setLevel(Level.WARNING);
+		LOGGER.log(Level.INFO,str);
+
 	    int striker1 = 0;int striker2 = 1,flag = 0,counter = 0;double curOver = 0;               //variables to store the index of players currently playing
 	           for(int i = 0;i < overs;i++)
 	           {
@@ -57,16 +66,13 @@ public class Match {
 							int nextPlayer = Math.max(striker1, striker2) + 1;
 							striker1  = nextPlayer;                      									//replace the player whose wicket is down with a new player
 						}
-	                    try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+
+	                    Utility.sleep();
 	                }
 	                
 	                if(flag == 1)
 	                	break;
-	                System.out.println("\nPlayers on the ground " + team.getPlayerList().get(striker1).getName() + "  -  " + team.getPlayerList().get(striker1).getRunScored() +" and " + team.getPlayerList().get(striker2).getName() + "  -  " + team.getPlayerList().get(striker2).getRunScored() + "\n");   //print the players currently playing
+				   LOGGER.log(Level.INFO,"Players on the ground " + team.getPlayerList().get(striker1).getName() + "  -  " + team.getPlayerList().get(striker1).getRunScored() +" and " + team.getPlayerList().get(striker2).getName() + "  -  " + team.getPlayerList().get(striker2).getRunScored() + "\n");
 
 	                striker1 = Utility.swap(striker2, striker2 = striker1);                     //switch players at the end of each over	              
 	                
@@ -84,11 +90,13 @@ public class Match {
         
     	team.getPlayerList().get(striker1).addRunScored(run);
     	 
-    	 if(run == 4)									//to count the no of fours hit by batsman
-    		team.getPlayerList().get(striker1).addFours();
+    	 if(run == 4) {                            //to count the no of fours hit by batsman
+			 team.getPlayerList().get(striker1).addFours();
+		 }
     	 
-    	 if(run == 6)
-    		 team.getPlayerList().get(striker1).addSixes();
+    	 if(run == 6) {
+			 team.getPlayerList().get(striker1).addSixes();
+		 }
     	 
     	if(run%2 == 1)
     	{
@@ -105,10 +113,9 @@ public class Match {
         	}
         }
         if(df.format(over).equals(printOver))									//check if current over is equal to given over and call printScoreBoard
-        	Display.ongoingScoreBoard(team, printOver, innings,over,striker1,striker2);
-        
-        System.out.println("Over = " + df.format(over) + " runHit = " + run + " 	Score =" +team.getTotalScore() + "/" + team.getTotalWickets());
-        return 0;
+        	Display.ongoingScoreBoard(team, innings,over,striker1,striker2);
+		LOGGER.log(Level.INFO, "Over = " + df.format(over) + " runHit = " + run + " 	Score =" +team.getTotalScore() + "/" + team.getTotalWickets());
+		return 0;
 	}
 	
 	
@@ -116,15 +123,15 @@ public class Match {
 	{
 		team.addTotalWickets();
         team.getPlayerList().get(striker1).modifyOut();
-        System.out.println("\nPlayer " + team.getPlayerList().get(striker1).getName() + "  -  " + team.getPlayerList().get(striker1).getRunScored() +" is out\n");       //print the player name whose wicket has been taken
-       
+		LOGGER.log(Level.INFO,"Player " + team.getPlayerList().get(striker1).getName() + "  -  " + team.getPlayerList().get(striker1).getRunScored() +" is out\n");
+
         if(df.format(curOver).equals(printOver))										//check if current over is equal to given over and call printScoreBoard
-        	Display.ongoingScoreBoard(team, printOver, innings,curOver,striker1,striker2);
+        	Display.ongoingScoreBoard(team, innings,curOver,striker1,striker2);
 
 		int nextPlayer = Math.max(striker1, striker2) + 1;
 		if(nextPlayer == 7)                          								//this represents the situation when 6th player is down
         {
-            System.out.println("All wicket down\n");
+        	LOGGER.log(Level.INFO,"All wicket down\n");
 
             DbHelper.updatePlayerInfo(team);
 

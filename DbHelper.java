@@ -25,27 +25,20 @@ public class DbHelper {
 	{
 		
 		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys", "root","Tekion@123");){
-        	
-        	preparedStatement = con.prepareStatement("DELETE FROM player");
-        	preparedStatement.executeUpdate();
-        	
+
             for(int i = 0;i < collection.length;i++)        //initialising the player list
             {
             	String str = collection[i];
             	preparedStatement = con.prepareStatement("INSERT INTO player(player_name) VALUES('"+str+"')");
             	preparedStatement.executeUpdate();
             }
-            preparedStatement = con.prepareStatement("DELETE FROM team");
-        	preparedStatement.executeUpdate();
-        	
+
         	preparedStatement = con.prepareStatement("INSERT INTO team(team_name) VALUES('CSK')");
         	preparedStatement.executeUpdate();
         	
         	preparedStatement = con.prepareStatement("INSERT INTO team(team_name) VALUES('RCB')");
         	preparedStatement.executeUpdate();
-        	
-        	preparedStatement = con.prepareStatement("DELETE FROM balls_data");
-        	preparedStatement.executeUpdate();
+
         }
         catch(SQLException se){
         	se.printStackTrace();
@@ -64,7 +57,7 @@ public class DbHelper {
 			else
 				prev_team_score = 0;
 
-        	if(run<=7)
+        	if(run<7)
         	{
         		int teamTotalRuns = team.getTotalScore() + run;
         		int teamTotalWickets = team.getTotalWickets();
@@ -195,7 +188,6 @@ public class DbHelper {
         catch(SQLException se){
         	se.printStackTrace();
         }
-    	System.out.println(tempList.size());
     	return tempList;
     }
 

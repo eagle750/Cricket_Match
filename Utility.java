@@ -1,4 +1,5 @@
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.*;
 
 public class Utility {
 	
@@ -16,4 +17,13 @@ public class Utility {
         return value1;
     }
 
+
+    public static void sleep() {                //sleep utility method
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -6,15 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Display {
+
+	private final static Logger LOGGER =
+			Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	static DecimalFormat df = new DecimalFormat("#.#");
 	static PreparedStatement preparedStatement = null;
 	static ResultSet resultSet = null,resultSet1=null,resultSet2=null;	
 	
-	public static void ongoingScoreBoard(Team team, String printOver, int innings, double curOver,int striker1, int striker2)    //function to print the scoreboard for given team and given over
+	public static void ongoingScoreBoard(Team team, int innings, double curOver,int striker1, int striker2)    //function to print the scoreboard for given team and given over
 	{
+
+
 		System.out.println("************************************************************");
 		System.out.println("				SCOREBOARD				");
 		System.out.println("************************************************************\n");
@@ -22,8 +29,8 @@ public class Display {
 		if(innings == 2)
 			System.out.println( MatchController.prevTeam.getName() +  "  scored -  " + MatchController.prevTeam.getTotalScore());
 		System.out.println("Over - " + df.format(curOver));
-		System.out.println( team.getPlayerList().get(striker1).getName() + "*" + "      - " + team.getPlayerList().get(striker1).getRunScored() + "   4's - " + team.getPlayerList().get(striker1).getFours() + "   6's - " + team.getPlayerList().get(striker1).getSixes() );
-		System.out.println( team.getPlayerList().get(striker2).getName() + "      - " + team.getPlayerList().get(striker2).getRunScored() + "   4's - " + team.getPlayerList().get(striker2).getFours() + "   6's - " + team.getPlayerList().get(striker2).getSixes() );
+		System.out.println( team.getPlayerList().get(striker1).getName() + "*" + "      - " + team.getPlayerList().get(striker1).getRunScored() + "   4's - " + team.getPlayerList().get(striker1).getFours() + "   6's - " + team.getPlayerList().get(striker1).getSixes());
+		System.out.println( team.getPlayerList().get(striker2).getName() + "      - " + team.getPlayerList().get(striker2).getRunScored() + "   4's - " + team.getPlayerList().get(striker2).getFours() + "   6's - " + team.getPlayerList().get(striker2).getSixes());
 
 		System.out.println("************************************************************\n");
 	}
@@ -68,14 +75,14 @@ public class Display {
         	            {
         	                int winningRun = Team1Score - Team2Score;
         	                System.out.println( Team1Name  + " won by " + winningRun + " runs\n");
-							preparedStatement = con.prepareStatement("INSERT INTO result(team_name,winning_run,winning_wicket) VALUES('"+ Team1Name +"', "+ winningRun +", "+ 0 +")");
+							preparedStatement = con.prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won) VALUES('"+Team1Name+"','"+Team2Name+"','"+ Team1Name +"', "+ winningRun +", "+ 0 +",'"+ Team1Name +"')");
 							preparedStatement.executeUpdate();
         	            }
         	            else if(Team1Score < Team2Score)
         	            {
         	                int winningWicket = 7 - Team2Wickets;
         	                System.out.println( Team2Name + " won by " + winningWicket + " wickets\n");
-							preparedStatement = con.prepareStatement("INSERT INTO result(team_name,winning_run,winning_wicket) VALUES('"+ Team2Name +"', "+ 0 +", "+ winningWicket +")");
+							preparedStatement = con.prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won) VALUES('"+Team1Name+"','"+Team2Name+"','"+ Team2Name +"', "+ 0 +", "+ winningWicket +",'"+ Team2Name +"')");
 							preparedStatement.executeUpdate();
         	            }
         	            else
@@ -108,9 +115,9 @@ public class Display {
 	    {
     		System.out.print(cntr+ "     ");
     		if(resultSet1.getInt("Out") == 1)
-    			System.out.println(resultSet1.getString("player_name") + "			" +  resultSet1.getString("run_scored") + "(" + resultSet1.getString("balls_played") +")");
+    			System.out.println(resultSet1.getString("player_name") + "			" +  resultSet1.getString("run_scored") + "(" + resultSet1.getString("balls_played") + ")   " + "4's-" +resultSet1.getString("fours") + "   6's-" + resultSet1.getString("sixes"));
     		else
-    			System.out.println(resultSet1.getString("player_name") + "*" +"			" +  resultSet1.getString("run_scored") + "(" + resultSet1.getString("balls_played") +")");
+    			System.out.println(resultSet1.getString("player_name") + "*" +"			" +  resultSet1.getString("run_scored") + "(" + resultSet1.getString("balls_played") +")   " + "4's-" +resultSet1.getString("fours") + "   6's-" + resultSet1.getString("sixes"));
 	    	cntr++;
 	    } 
     	  		
@@ -125,13 +132,14 @@ public class Display {
 	
 	
     
-    public static void printPlayerDetails(Vector<Player> team)                     //function to print the list of players in each team
+    public static void printPlayerDetails(String str,Vector<Player> team)                     //function to print the list of players in each team
     {
+		LOGGER.setLevel(Level.WARNING);
+		LOGGER.log(Level.INFO, str);
     for(int i = 0;i < 7; i++)
         {
-           System.out.print (team.get(i).getName() + " ");
+        	LOGGER.log(Level.INFO,team.get(i).getName() + " ");
         }
-    System.out.println();
     }
     
 }
