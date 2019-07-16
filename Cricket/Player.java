@@ -1,62 +1,62 @@
+package Cricket;
+
 public class Player {
 	
 	 private String name;
 	 private int playerId;
-	 private int ballsThrown;
-	 private int wicketsTaken;
 	 private int runScored;
 	 private int ballsplayed;
+	 private String playerType;
 	 private int sixes;
 	 private int fours;
 	 private int out;
 	
-	Player(String name, int playerId, int runScored, int ballsPlayed, int sixes, int fours, int out)
+	public Player(String name, String playerType, int playerId)
 	{
 		setName(name);
-		setRunScored(runScored);
-		setRunScored(ballsPlayed);
-		setSixes(sixes);
-		setFours(fours);
-		setOut(out);
+		setPlayerType(playerType);
 		setPlayerId(playerId);
-	}	
-	
+	}
+
+	private void setPlayerType(String playerType) { this.playerType = playerType;}
+
 	//Setter functions
 	public void setName(String name)
 	{
 		this.name = name;
 	}
-	
+
 	public void setRunScored (int runScored)
 	{
 		this.runScored = runScored;
 	}
-	
-	public void setPlayerId (int playerId)
-	{
-		this.playerId = playerId;
-	}
+
 
 	public void setBallsPlayed (int ballsPlayed)
 	{
 		this.ballsplayed = ballsPlayed;
 	}
-	
+
+	public void setPlayerId (int playerId)
+	{
+		this.playerId = playerId;
+	}
+
 	public void setSixes (int sixes)
 	{
 		this.sixes = sixes;
 	}
-	
+
 	public void setFours (int fours)
 	{
-		this.fours = fours;	
+		this.fours = fours;
 	}
-	
+
 	public void setOut (int out)
 	{
 		this.out = out;
 	}
-	
+
 	//getter function
 	public String getName()
 	{
@@ -82,7 +82,12 @@ public class Player {
 	{
 		return sixes;
 	}
-	
+
+	public String getPlayerType ()
+	{
+		return playerType;
+	}
+
 	public int getFours ()
 	{
 		return fours;	

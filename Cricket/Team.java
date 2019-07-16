@@ -1,14 +1,17 @@
+package Cricket;
+
 import java.util.*;
 
 public class Team {
 
 	
-	private Vector<Player> playerList = new Vector<Player>();
+	private List<Player> playerList = new ArrayList<>();
 	private String name;
 	private int totalScore;
 	private int totalWickets;
-	
-	Team(String name, Vector<Player> playerList,int totalScore, int totalWickets)
+	private int tossWon;
+
+	public Team(String name, List<Player> playerList,int totalScore, int totalWickets)
 	{
 		setName(name);
 		setPlayerList(playerList);
@@ -17,12 +20,13 @@ public class Team {
 	}
 	
 	//Setter Function
-	public void setName(String name)
-	{
-		this.name = name;
+	public void setName(String name) { this.name = name; }
+
+	public void setTossWon(int tossWon) {
+		this.tossWon = tossWon;
 	}
-	
-	public void setPlayerList(Vector<Player> playerList)
+
+	public void setPlayerList(List<Player> playerList)
 	{
 		for(int i = 0; i < playerList.size(); i++)
 		{
@@ -46,7 +50,7 @@ public class Team {
 		return name;
 	}
 	
-	public Vector<Player> getPlayerList()
+	public List<Player> getPlayerList()
 	{
 		return playerList;
 	}
@@ -60,7 +64,11 @@ public class Team {
 	{
 		return totalWickets;
 	}
-	
+
+	public int getTossWon() {
+		return tossWon;
+	}
+
 	//Modify function
 	public void addTotalScore(int runs)
 	{
@@ -71,5 +79,7 @@ public class Team {
 	{
 		totalWickets += 1 ;
 	}
+
+
 
 }
