@@ -13,6 +13,13 @@ public class CricketRepoMysqlImpl implements  CricketRepo  {
     private static PreparedStatement preparedStatement = null;
     private static ResultSet resultSet = null;
 
+    private static CricketRepoMysqlImpl cricketRepoMysql =  new CricketRepoMysqlImpl();
+
+    public static CricketRepoMysqlImpl getCricketRepoMysql() {
+        return cricketRepoMysql;
+    }
+
+
     @Override
     public Team fetchTeamDetails(String teamName)
     {
@@ -27,12 +34,10 @@ public class CricketRepoMysqlImpl implements  CricketRepo  {
                 playerList.add(player);
             }
         }
-
         catch(SQLException se){
             se.printStackTrace();
         }
-        Team team = new Team(teamName, playerList, 0, 0);
-        return team;
+        return new Team(teamName, playerList, 0, 0);
     }
 
 
@@ -44,11 +49,9 @@ public class CricketRepoMysqlImpl implements  CricketRepo  {
             preparedStatement = Connect_db.getConnection().prepareStatement("UPDATE player SET run_scored = "+Zero+" ,balls_played = "+Zero+",strike_rate = "+Zero+",fours = "+Zero+",sixes = "+Zero+", PLayer.out = "+Zero+" WHERE team_name = '"+teamName+"'");
             preparedStatement.executeUpdate();
         }
-
         catch(SQLException se){
             se.printStackTrace();
         }
-
     }
 
 
@@ -112,7 +115,6 @@ public class CricketRepoMysqlImpl implements  CricketRepo  {
                 }
             }
         }
-
         catch(SQLException se){
             se.printStackTrace();
         }
@@ -125,7 +127,6 @@ public class CricketRepoMysqlImpl implements  CricketRepo  {
         try{
             preparedStatement = Connect_db.getConnection().prepareStatement("UPDATE balls_data SET status = '"+ completed +"'");
             preparedStatement.executeUpdate();
-
         }
         catch(SQLException se){
             se.printStackTrace();
@@ -206,7 +207,6 @@ public class CricketRepoMysqlImpl implements  CricketRepo  {
                     preparedStatement = Connect_db.getConnection().prepareStatement("UPDATE series_info SET team_won = 'DRAW' WHERE series_id= " + Series_id + "");
                     preparedStatement.executeUpdate();
                 }
-
             }
         }
         catch(SQLException se){

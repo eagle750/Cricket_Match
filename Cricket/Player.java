@@ -21,38 +21,38 @@ public class Player {
 	private void setPlayerType(String playerType) { this.playerType = playerType;}
 
 	//Setter functions
-	public void setName(String name)
+	private void setName(String name)
 	{
 		this.name = name;
 	}
 
-	public void setRunScored (int runScored)
+	void setRunScored(int runScored)
 	{
 		this.runScored = runScored;
 	}
 
 
-	public void setBallsPlayed (int ballsPlayed)
+	void setBallsPlayed(int ballsPlayed)
 	{
 		this.ballsplayed = ballsPlayed;
 	}
 
-	public void setPlayerId (int playerId)
+	 void setPlayerId (int playerId)
 	{
 		this.playerId = playerId;
 	}
 
-	public void setSixes (int sixes)
+	void setSixes(int sixes)
 	{
 		this.sixes = sixes;
 	}
 
-	public void setFours (int fours)
+	void setFours(int fours)
 	{
 		this.fours = fours;
 	}
 
-	public void setOut (int out)
+	void setOut(int out)
 	{
 		this.out = out;
 	}
@@ -83,7 +83,7 @@ public class Player {
 		return sixes;
 	}
 
-	public String getPlayerType ()
+	String getPlayerType ()
 	{
 		return playerType;
 	}
@@ -99,27 +99,27 @@ public class Player {
 	}
 	
 	//modify function
-	public void addRunScored (int run)
+	void addRunScored(int run)
 	{
 		this.runScored += run;
 	}
 	
-	public void addBallsPlayed ()
+	void addBallsPlayed()
 	{
 		this.ballsplayed += 1;
 	}
 	
-	public void addSixes ()
+	void addSixes()
 	{
 		this.sixes += 1;
 	}
 	
-	public void addFours ()
+	void addFours()
 	{
 		this.fours += 1;	
 	}
 	
-	public void modifyOut ()
+	void modifyOut()
 	{
 		this.out += 1;
 	}

@@ -8,11 +8,10 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 class PrintMatchDetails {
-    static private CricketRepoMysqlImpl cricketRepoMysql = new CricketRepoMysqlImpl();
 
     static private DecimalFormat df = new DecimalFormat("#.#");
-
     static private PreparedStatement preparedStatement = null;
+
 
     static void ongoingScoreBoard(Team team, int innings, double curOver, int striker1, int striker2)    //function to print the scoreboard for given team and given over
     {
@@ -36,16 +35,16 @@ class PrintMatchDetails {
         System.out.println("\n*****************************************************************");
         System.out.println("FINAL RESULT");
         System.out.println("*****************************************************************\n");
-        if (team1.getTossWon() == 1)
-            System.out.println(team1.getName() + "won the toss");
-        else
-            System.out.println(team2.getName() + "won the toss");
 
+        System.out.println(team1.getName() + " won the toss");
         computeFinalResult(Series_id,team1,team2,series);
+
+        displayTeamDetails(team1.getName(), team1.getTotalScore(), team1.getTotalWickets());
+        displayTeamDetails(team2.getName(), team2.getTotalScore(), team2.getTotalWickets());
     }
 
 
-    public static void displayTeamDetails(String TeamName,int TotalRuns,int TotalWickets)
+     private static void displayTeamDetails(String TeamName, int TotalRuns, int TotalWickets)
     {
         int cntr = 1;
         System.out.println("        "+TeamName);
@@ -66,7 +65,6 @@ class PrintMatchDetails {
                     System.out.println(resultSet1.getString("player_name") + "*" + "  " + resultSet1.getString("type") +"			" +  resultSet1.getString("run_scored") + "(" + resultSet1.getString("balls_played") +")   " + "4's-" +resultSet1.getString("fours") + "   6's-" + resultSet1.getString("sixes"));
                 cntr++;
             }
-
             System.out.println("\nTOTAL" + "				" + TotalRuns + "/" + TotalWickets + "\n");
             System.out.println("--------------------------------------------------");
         }
@@ -77,7 +75,7 @@ class PrintMatchDetails {
     }
 
 
-    public static void seriesResult(Series series) {
+     static void seriesResult(Series series) {
 
         System.out.println(series.getTeam1Name() + " won " + series.getTeamMatchesWon(series.getTeam1Name())+ "\n");
         System.out.println(series.getTeam2Name() + " won " + series.getTeamMatchesWon(series.getTeam2Name())+ "\n");
@@ -99,43 +97,21 @@ class PrintMatchDetails {
             if( team1.getTotalScore() > team2.getTotalScore()) {
                 series.setTeamMatchesWon(team1.getName());
 
-                cricketRepoMysql.updateSeriesInfo(Series_id,team1.getName());
+                CricketRepoMysqlImpl.getCricketRepoMysql().updateSeriesInfo(Series_id, team1.getName());
 
-                if(team1.getTossWon() == 1) {
-                    int winningRun = winningRunTeam(team1,team2);
-                    preparedStatement = Connect_db.getConnection().prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won, series_no) VALUES('" + team1.getName() + "','" + team2.getName() + "','" + team1.getName() + "', " + winningRun + ", " + 0 + ",'" + team1.getName() + "', " + Series_id + ")");
-                    preparedStatement.executeUpdate();
-                }
-                else
-                {
-                    int winningWicket = winningWicketWicket(team1);
-                    preparedStatement = Connect_db.getConnection().prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won,series_no) VALUES('" + team1.getName() + "','" + team2.getName() + "','" + team1.getName() + "', "+ 0 + ", "+ winningWicket + ",'"+ team1.getName() + "'," + Series_id + ")");
-                    preparedStatement.executeUpdate();
-                }
+                int winningRun = winningRunTeam(team1, team2);
+                preparedStatement = Connect_db.getConnection().prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won, series_no) VALUES('" + team1.getName() + "','" + team2.getName() + "','" + team1.getName() + "', " + winningRun + ", " + 0 + ",'" + team1.getName() + "', " + Series_id + ")");
+                preparedStatement.executeUpdate();
             }
-            else if(team1.getTotalScore() < team2.getTotalScore())
-            {
-                cricketRepoMysql.updateSeriesInfo(Series_id,team2.getName());
-
-                series.setTeamMatchesWon(team2.getName());
-                if(team2.getTossWon() == 1) {
-
-                    int winningRun = winningRunTeam(team2,team1);
-                    preparedStatement = Connect_db.getConnection().prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won, series_no) VALUES('" + team1.getName() + "','" + team2.getName() + "','" + team2.getName() + "', " + winningRun + ", " + 0 + ",'" + team2.getName() + "', " + Series_id + ")");
-                    preparedStatement.executeUpdate();
-                }
-                else
+                else if(team1.getTotalScore() < team2.getTotalScore())
                 {
                     int winningWicket = winningWicketWicket(team2);
-                    preparedStatement = Connect_db.getConnection().prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won,series_no) VALUES('" + team1.getName() + "','" + team2.getName() + "','" + team2.getName() + "', " + 0 + ", " + winningWicket + ",'" + team2.getName() + "'," + Series_id + ")");
+                    preparedStatement = Connect_db.getConnection().prepareStatement("INSERT INTO result(team1_name,team2_name,winning_team,winning_run,winning_wicket,toss_won,series_no) VALUES('" + team1.getName() + "','" + team2.getName() + "','" + team2.getName() + "', "+ 0 + ", "+ winningWicket + ",'"+ team1.getName() + "'," + Series_id + ")");
                     preparedStatement.executeUpdate();
                 }
-            }
             else {
                 System.out.println("Draw");
             }
-            displayTeamDetails(team1.getName(), team1.getTotalScore(), team1.getTotalWickets());
-            displayTeamDetails(team2.getName(), team2.getTotalScore(), team2.getTotalWickets());
         }
         catch(SQLException se){
             se.printStackTrace();
@@ -145,8 +121,8 @@ class PrintMatchDetails {
 
     private static int winningRunTeam(Team team1,Team team2)
     {
-        int winningRun = team2.getTotalScore() - team1.getTotalScore();
-        System.out.println(team2.getName() + " won by " + winningRun + " runs\n");
+        int winningRun = team1.getTotalScore() - team2.getTotalScore();
+        System.out.println(team1.getName() + " won by " + winningRun + " runs\n");
 
         return winningRun;
     }

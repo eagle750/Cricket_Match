@@ -20,13 +20,13 @@ public class Team {
 	}
 	
 	//Setter Function
-	public void setName(String name) { this.name = name; }
+	private void setName(String name) { this.name = name; }
 
-	public void setTossWon(int tossWon) {
+	void setTossWon(int tossWon) {
 		this.tossWon = tossWon;
 	}
 
-	public void setPlayerList(List<Player> playerList)
+	private void setPlayerList(List<Player> playerList)
 	{
 		for(int i = 0; i < playerList.size(); i++)
 		{
@@ -34,12 +34,12 @@ public class Team {
 		}
 	}
 	
-	public void setTotalScore(int totalScore)
+	void setTotalScore(int totalScore)
 	{
 		this.totalScore = totalScore;
 	}
 	
-	public void setTotalWickets(int totalWickets)
+	void setTotalWickets(int totalWickets)
 	{
 		this.totalWickets = totalWickets;
 	}

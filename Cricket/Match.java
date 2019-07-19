@@ -4,24 +4,17 @@ import repo.CricketRepoMysqlImpl;
 
 import java.util.concurrent.*;
 import java.text.DecimalFormat;
-import java.util.logging.Level;
 
 //class containing function for conducting match between teams
-public class Match {
+class Match {
 
 	private DecimalFormat df = new DecimalFormat("#.#");
 
 
-	private CricketRepoMysqlImpl cricketRepoMysql = new CricketRepoMysqlImpl();
-
-	public int doToss()                            //function to randomly perform the task of tossing the coin
-	{
-		int tossResult = ThreadLocalRandom.current().nextInt(2);    //using ThreadLocalRandom class
-		return tossResult;
-    }
+	int doToss() { return ThreadLocalRandom.current().nextInt(2); }
 	
 	
-	public void playInnings(int overs, Team team, String printOver, int innings,int Series_id,int matchNo) 		//function to simulate the playing of a team with given overs and specified team
+	void playInnings(int overs, Team team, String printOver, int innings, int Series_id, int matchNo) 		//function to simulate the playing of a team with given overs and specified team
 	{
 		int striker1 = 0; int striker2 = 1,flag = 0,counter = 0; double curOver;
 
@@ -34,7 +27,7 @@ public class Match {
 	                	curOver += (double)1/10;
 	                	int run  =  getRuns(team, striker1);
 
-						cricketRepoMysql.updateBallInfo(counter,team,striker1,run,striker2,Series_id,matchNo);
+						CricketRepoMysqlImpl.getCricketRepoMysql().updateBallInfo(counter,team,striker1,run,striker2,Series_id,matchNo);
 
 	                    if(run < 7 )                     // here run represents the index of string array "outcomes" defined above in class
 	                    {
@@ -63,20 +56,21 @@ public class Match {
 
 				   striker1 = CricketUtils.swap(striker2, striker2 = striker1);                     //switch players at the end of each over
 	           }
-		       cricketRepoMysql.updatePlayerInfo(team);
+		CricketRepoMysqlImpl.getCricketRepoMysql().updatePlayerInfo(team);
     }
 	
 
-    public int getRuns(Team team,int striker)
+    private int getRuns(Team team, int striker)
 	{
 		int run = CricketUtils.ballingOutcome();
 
-		String playerType =  team.getPlayerList().get(striker).getPlayerType();
+		String playerType = team.getPlayerList().get(striker).getPlayerType();
 
-		if(run ==  7 && (playerType.equals("BATSMAN")|| playerType.equals("WICKETKEEPER") || playerType.equals("ALLROUNDER"))) {
+		boolean b = playerType.equals("BATSMAN") || playerType.equals("WICKETKEEPER") || playerType.equals("ALLROUNDER");
+		if(run ==  7 && b) {
 			run = CricketUtils.ballingOutcome();
 
-			if(run ==  7 && (playerType.equals("BATSMAN")|| playerType.equals("WICKETKEEPER") || playerType.equals("ALLROUNDER"))) {
+			if(run ==  7 && b) {
 				run = CricketUtils.ballingOutcome();
 			}
 		}
@@ -84,37 +78,31 @@ public class Match {
 	}
 
 
-	public int updateRunInfo(Team team,int striker1,int striker2, int run,String printOver,double over, int innings)
+	private int updateRunInfo(Team team, int striker1, int striker2, int run, String printOver, double over, int innings)
 	{
 		team.getPlayerList().get(striker1).addBallsPlayed();
         
     	team.getPlayerList().get(striker1).addRunScored(run);
+		team.addTotalScore(run);
+
+		if(run == 4) { team.getPlayerList().get(striker1).addFours(); }
     	 
-    	 if(run == 4) {                            //to count the no of fours hit by batsman
-			 team.getPlayerList().get(striker1).addFours();
-		 }
+    	 if(run == 6) { team.getPlayerList().get(striker1).addSixes(); }
     	 
-    	 if(run == 6) {
-			 team.getPlayerList().get(striker1).addSixes();
-		 }
-    	 
-    	if(run%2 == 1) {
-    		striker1 = CricketUtils.swap(striker2, striker2 = striker1);				//if runs are odd then swap the players
-    	}
-        team.addTotalScore(run);  
-                            
+    	if(run%2 == 1) { striker1 = CricketUtils.swap(striker2, striker2 = striker1); }
+
         if(innings == 2) {
-        	if(MatchController.prevTeam.getTotalScore() < team.getTotalScore()) {
-        		return 1;
-        	}
+        	if(MatchController.prevTeam.getTotalScore() < team.getTotalScore()) { return 1; }
         }
+
         if(df.format(over).equals(printOver))									//check if current over is equal to given over and call printScoreBoard
 			PrintMatchDetails.ongoingScoreBoard(team, innings,over,striker1,striker2);
-		return 0;
+
+        return 0;
 	}
 	
 	
-	public void updateWicketDownInfo(Team team,int striker1,int striker2,String printOver,int innings,double curOver)
+	private void updateWicketDownInfo(Team team, int striker1, int striker2, String printOver, int innings, double curOver)
 	{
 		team.addTotalWickets();
         team.getPlayerList().get(striker1).modifyOut();

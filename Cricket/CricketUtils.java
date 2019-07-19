@@ -8,9 +8,9 @@ import repo.CricketRepoMysqlImpl;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class CricketUtils {
+class CricketUtils {
 
-	public static int ballingOutcome()   //function to randomly generate the outcome of balling from array "outcomes" defined above
+	static int ballingOutcome()   //function to randomly generate the outcome of balling from array "outcomes" defined above
     {
         int index;
         int tmp = ThreadLocalRandom.current().nextInt(9);
@@ -19,13 +19,13 @@ public class CricketUtils {
     }
 
 
-    public static int swap(int value1, int value2)           //function to swap the players
+    static int swap(int value1, int value2)           //function to swap the players
     {
         return value1;
     }
 
 
-    public static void sleep() {                //sleep utility method
+    static void sleep() {                //sleep utility method
 
         try {
             Thread.sleep(100);
@@ -35,7 +35,7 @@ public class CricketUtils {
     }
 
 
-    public static float round(float value, int places) {
+     static float round(float value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = new BigDecimal(value);
@@ -44,15 +44,16 @@ public class CricketUtils {
     }
 
 
-    public static void teamReset(Team team)
+    static void teamReset(Team team)
     {
         playerListReset(team.getPlayerList(),team.getName());
         team.setTotalScore(0);
         team.setTotalWickets(0);
+        team.setTossWon(0);
     }
 
 
-    public static void playerListReset(List<Player> playerList,String teamName)
+    private static void playerListReset(List<Player> playerList, String teamName)
     {
         CricketRepoMysqlImpl cricketRepoMysql =  new CricketRepoMysqlImpl();
         cricketRepoMysql.resetPlayerInfo(teamName);
